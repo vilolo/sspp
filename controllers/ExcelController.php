@@ -26,6 +26,31 @@ class ExcelController extends Controller
         echo 'okok';
     }
 
+    public function actionTt(){
+        $str = '{"m":"V00001","c1":"VND","c2":"CUST1001","l":"en-us","r":"T123456789","c3":"128.199.171.73","a":"100000.00","b":"VCB","su":"http://localhost:8088/Home/PaymentSuccessfully","fu":"http://localhost:8088/Home/PaymentFailed","c4":"http://localhost:8088/Home/TransactionResult","k":"3417096b0676f8761e2ee4a173fc88a8","d":"2012-05-21 20:04:00PM","n":"123"}';
+        $base64 = base64_encode($str);
+
+        echo $this->urlEncoder($base64);
+    }
+
+    private function urlEncoder($strBase64){
+        $len = strlen($strBase64);
+        if (!$strBase64 || $len < 100){
+            return '';
+        }
+
+        $key = rand(1,9);
+        $partOne = substr($strBase64, 0, $len-10);
+        $partTwo = substr($strBase64, $len-10);
+
+        $newStr = $partOne.$key.$partTwo;
+        $newPartOne = substr($newStr, 0, $key);
+        $newPartTwo = substr($newStr, $key);
+        $key2 = rand(1,9);
+
+        return $newPartOne.$key2.$newPartTwo;
+    }
+
     public function actionCategory(){
         $file_path = './data/MY-TW category.xlsx';
         $PHPReader = PHPExcel_IOFactory::load($file_path);
